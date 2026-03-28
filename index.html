@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+        
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .merchant-info {
+            padding: 25px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .merchant-name {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .txn-id {
+            font-size: 12px;
+            color: #888;
+            font-family: monospace;
+        }
+        
+        .amount-box {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+        
+        .amount-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .amount-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .amount-value span {
+            font-size: 28px;
+            color: #667eea;
+        }
+        
+        .payment-method {
+            padding: 25px 30px;
+        }
+        
+        .method-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .upi-card {
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upi-card:hover {
+            border-color: #667eea;
+            background: #fafaff;
+        }
+        
+        .upi-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .upi-info {
+            flex: 1;
+        }
+        
+        .upi-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .upi-id {
+            font-size: 13px;
+            color: #666;
+            font-family: monospace;
+            margin-top: 3px;
+        }
+        
+        .timer-section {
+            padding: 20px 30px;
+            text-align: center;
+            background: #fff8e1;
+        }
+        
+        .timer-text {
+            font-size: 13px;
+            color: #856404;
+        }
+        
+        .timer-display {
+            font-size: 26px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+        
+        .action-section {
+            padding: 25px 30px;
+        }
+        
+        .pay-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .pay-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .processing {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid white;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .processing-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <div class="header">
+            <h1>Secure Payment</h1>
+            <div class="secure-badge">
+                <span>256-bit SSL Encrypted</span>
+            </div>
+        </div>
+        
+        <div class="merchant-info">
+            <div class="merchant-name" id="merchantName">Loading...</div>
+            <div class="txn-id">TXN: <span id="txnId">---</span></div>
+        </div>
+        
+        <div class="amount-box">
+            <div class="amount-label">Total Amount</div>
+            <div class="amount-value">
+                <span>₹</span><span id="amount">0.00</span>
+            </div>
+        </div>
+        
+        <div class="payment-method">
+            <div class="method-title">Pay via UPI</div>
+            <div class="upi-card" onclick="initiatePayment()">
+                <div class="upi-icon">UPI</div>
+                <div class="upi-info">
+                    <div class="upi-label">Unified Payments Interface</div>
+                    <div class="upi-id" id="upiId">---</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timer-section">
+            <div class="timer-text">Complete payment within</div>
+            <div class="timer-display" id="timer">05:00</div>
+        </div>
+        
+        <div class="action-section">
+            <button class="pay-btn" onclick="initiatePayment()">
+                Pay Now ₹<span id="btnAmount">0.00</span>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-text">
+                Secured by 256-bit encryption<br>
+                Your transaction is protected
+            </div>
+        </div>
+    </div>
+    
+    <div class="processing" id="processing">
+        <div class="spinner"></div>
+        <div class="processing-text">Processing your payment...</div>
+    </div>
+
+    <script>
+        function getParams() {
+            const p = new URLSearchParams(location.search);
+            return {
+                name: p.get('name') || 'Merchant',
+                amount: p.get('amount') || '100',
+                upi: p.get('upi') || 'test@upi'
+            };
+        }
+        
+        function init() {
+            const params = getParams();
+            document.getElementById('merchantName').textContent = decodeURIComponent(params.name);
+            document.getElementById('amount').textContent = parseFloat(params.amount).toFixed(2);
+            document.getElementById('btnAmount').textContent = parseFloat(params.amount).toFixed(2);
+            document.getElementById('upiId').textContent = params.upi;
+            document.getElementById('txnId').textContent = 'TXN' + Date.now().toString().slice(-10);
+        }
+        
+        let timeLeft = 300;
+        function startTimer() {
+            const update = () => {
+                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${m}:${s}`;
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    setTimeout(update, 1000);
+                } else {
+                    document.getElementById('timer').textContent = 'EXPIRED';
+                    document.querySelector('.pay-btn').disabled = true;
+                    document.querySelector('.pay-btn').textContent = 'Session Expired';
+                }
+            };
+            update();
+        }
+        
+        function initiatePayment() {
+            const params = getParams();
+            const overlay = document.getElementById('processing');
+            overlay.style.display = 'flex';
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                const upiUrl = `upi://pay?pa=${encodeURIComponent(params.upi)}&pn=${encodeURIComponent(params.name)}&am=${params.amount}&cu=INR`;
+                window.location.href = upiUrl;
+            }, 2000);
+        }
+        
+        window.onload = () => {
+            init();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
