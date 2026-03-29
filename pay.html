@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .lock-icon {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .secure-text {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .logo-section {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .uploaded-logo {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .logo-name {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .no-logo {
+            color: #999;
+            font-size: 14px;
+            padding: 20px;
+        }
+        
+        .amount-box {
+            text-align: center;
+            padding: 20px;
+            background: #fff5eb;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #ffb347;
+        }
+        
+        .amount-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .amount-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .upi-section {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-radius: 12px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 2px solid #667eea30;
+        }
+        
+        .upi-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .upi-id-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .upi-id {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            word-break: break-all;
+            text-align: left;
+        }
+        
+        .copy-upi-btn {
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .copy-upi-btn:hover {
+            background: #218838;
+        }
+        
+        .upi-apps {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .upi-app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .upi-note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 15px;
+        }
+        
+        .upi-pay-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .upi-pay-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .manual-upi {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .manual-upi-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        
+        .error-message h2 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="paymentContainer">
+        <div class="lock-icon">🔒</div>
+        <h1 class="secure-text">Secure payment</h1>
+        
+        <div class="logo-section" id="logoSection">
+            <div class="no-logo">No logo uploaded</div>
+        </div>
+        
+        <div class="amount-box">
+            <div class="amount-label">Amount to Pay</div>
+            <div class="amount-value" id="amountValue">₹ 0</div>
+        </div>
+        
+        <div class="description" id="paymentDescription">Complete your secure payment</div>
+        
+        <div class="upi-section" id="upiSection">
+            <div class="upi-label">Pay via UPI</div>
+            <div class="upi-apps">
+                <div class="upi-app-icon">G</div>
+                <div class="upi-app-icon">P</div>
+                <div class="upi-app-icon">P</div>
+            </div>
+            <div class="upi-id-box">
+                <div class="upi-id" id="manualUpiId">-</div>
+                <button class="copy-upi-btn" onclick="copyUpiId()">Copy UPI</button>
+            </div>
+            <button class="upi-pay-btn" onclick="payViaUPI()">Pay via UPI App</button>
+            <p class="upi-note">Google Pay, PhonePe, Paytm, BHIM & all UPI apps supported</p>
+        </div>
+    </div>
+    
+    <script>
+        // Get payment ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('id');
+        
+        let currentPaymentData = null;
+        
+        if (paymentId) {
+            // Retrieve payment data from localStorage
+            const paymentData = localStorage.getItem(paymentId);
+            
+            if (paymentData) {
+                currentPaymentData = JSON.parse(paymentData);
+                
+                // Display logo if available
+                const logoSection = document.getElementById('logoSection');
+                if (currentPaymentData.logo) {
+                    logoSection.innerHTML = `
+                        <img class="uploaded-logo" src="${currentPaymentData.logo}" alt="Logo">
+                        <div class="logo-name">${currentPaymentData.logoName}</div>
+                    `;
+                } else {
+                    logoSection.innerHTML = `<div class="logo-name">${currentPaymentData.logoName}</div>`;
+                }
+                
+                // Display amount
+                document.getElementById('amountValue').textContent = '₹ ' + parseInt(currentPaymentData.amount).toLocaleString();
+                
+                // Display description
+                if (currentPaymentData.description) {
+                    document.getElementById('paymentDescription').textContent = currentPaymentData.description;
+                }
+                
+                // Display UPI ID
+                if (currentPaymentData.upiId) {
+                    document.getElementById('manualUpiId').textContent = currentPaymentData.upiId;
+                } else {
+                    document.getElementById('upiSection').innerHTML = `
+                        <div style="color: #dc3545; font-size: 14px;">
+                            No UPI ID configured for this payment link.
+                        </div>
+                    `;
+                }
+            } else {
+                // Payment data not found - no option to create new link
+                document.getElementById('paymentContainer').innerHTML = `
+                    <div class="error-message">
+                        <h2>⚠️ Link Expired</h2>
+                        <p>This payment link has expired or is invalid.</p>
+                    </div>
+                `;
+            }
+        } else {
+            // No payment ID in URL - no option to create new link
+            document.getElementById('paymentContainer').innerHTML = `
+                <div class="error-message">
+                    <h2>⚠️ Invalid Link</h2>
+                    <p>No payment information found.</p>
+                </div>
+            `;
+        }
+        
+        function payViaUPI() {
+            if (currentPaymentData && currentPaymentData.upiId) {
+                const amount = currentPaymentData.amount;
+                const upiId = currentPaymentData.upiId;
+                const name = currentPaymentData.logoName || 'Payment';
+                
+                // Create UPI payment link
+                const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+                
+                // Try to open UPI app
+                window.location.href = upiLink;
+                
+                // Show message
+                setTimeout(() => {
+                    alert('Opening UPI app... If no app opens, please copy the UPI ID and pay manually: ' + upiId);
+                }, 500);
+            } else {
+                alert('No UPI ID configured for this payment.');
+            }
+        }
+        
+        function copyUpiId() {
+            if (currentPaymentData && currentPaymentData.upiId) {
+                navigator.clipboard.writeText(currentPaymentData.upiId).then(function() {
+                    alert('UPI ID copied: ' + currentPaymentData.upiId);
+                }).catch(function(err) {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = currentPaymentData.upiId;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    alert('UPI ID copied: ' + currentPaymentData.upiId);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
